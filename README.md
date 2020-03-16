@@ -7,6 +7,8 @@ A minimal IndexedDB wrapper for ClojureScript
 
 ## Installation
 
+[![Clojars Project](https://img.shields.io/clojars/v/g7s/aye-db.svg)](https://clojars.org/g7s/aye-db)
+
 To install, add the following to your project `:dependencies`:
 
     [g7s/aye-db "0.1.0"]
