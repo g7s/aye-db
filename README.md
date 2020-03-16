@@ -2,7 +2,7 @@
 
 A minimal IndexedDB wrapper for ClojureScript
 
-![aye db - star trek scotty](https://imgflip.com/i/3ss1qk)
+![star trek scotty](https://i.imgflip.com/3ss1qk.jpg)
 
 
 ## Installation
@@ -59,11 +59,41 @@ where `object-store` is the string name of the object store that you are queryin
 is a keyword (e.g. `:idb/get`) and `args` are data that are needed by the `query-type`. The mapping of
 query type keyword to the native IndexedDB method is:
 
-```
 | query type    | IndexedDB     |
 | ------------- |---------------|
-| **:idb/get**  | [IDBObjectStore.get()](https://developer.mozilla.org/en-US/docs/Web/API/IDBObjectStore/get)|
+| `:idb/get` | [IDBObjectStore.get()](https://developer.mozilla.org/en-US/docs/Web/API/IDBObjectStore/get)|
+| `:idb/get-all` | [IDBObjectStore.getAll()](https://developer.mozilla.org/en-US/docs/Web/API/IDBObjectStore/getAll)|
+| `:idb/get-key`  | [IDBObjectStore.getKey()](https://developer.mozilla.org/en-US/docs/Web/API/IDBObjectStore/getKey)|
+| `:idb/get-all-keys` | [IDBObjectStore.getAllKeys()](https://developer.mozilla.org/en-US/docs/Web/API/IDBObjectStore/getAllKeys)|
+| `:idb/cursor` | [IDBObjectStore.openCursor()](https://developer.mozilla.org/en-US/docs/Web/API/IDBObjectStore/openCursor)|
+| `:idb/key-cursor` | [IDBObjectStore.openKeyCursor()](https://developer.mozilla.org/en-US/docs/Web/API/IDBObjectStore/openKeyCursor)|
+| `:idb/index` | [IDBObjectStore.index()](https://developer.mozilla.org/en-US/docs/Web/API/IDBObjectStore/index)|
+| `:idb/count` | [IDBObjectStore.count()](https://developer.mozilla.org/en-US/docs/Web/API/IDBObjectStore/count)|
+| `:idb/put` | [IDBObjectStore.put()](https://developer.mozilla.org/en-US/docs/Web/API/IDBObjectStore/put)|
+| `:idb/add` | [IDBObjectStore.add()](https://developer.mozilla.org/en-US/docs/Web/API/IDBObjectStore/add)|
+| `:idb/delete` | [IDBObjectStore.delete()](https://developer.mozilla.org/en-US/docs/Web/API/IDBObjectStore/delete)|
+| `:idb/clear` | [IDBObjectStore.clear()](https://developer.mozilla.org/en-US/docs/Web/API/IDBObjectStore/clear)|
+
+From the above links you can see which (if any) arguments you should pass for every query type.
+**NOTE**: The `:idb/index` query accepts only two arguments; the name of the index to open and a query to run on the index e.g.
+
+```clojure
+(exec-fn-symbol ["users" [:idb/index "by-name" [:idb/get "John"]]])
 ```
+
+Because some queries accept a [key range](https://developer.mozilla.org/en-US/docs/Web/API/IDBKeyRange) instead of just a key, aye-db exposes functions for constructing key ranges:
+
+| aye-db | IndexedDB constructor | Meaning |
+|--------------|-----------------------|---------|
+| `(r<= x)` | IDBKeyRange.upperBound(x) | All keys ≤ x |
+| `(r< x)` | IDBKeyRange.upperBound(x, true) | All keys < x |
+| `(r>= y)` | IDBKeyRange.lowerBound(y) | All keys ≥ y |
+| `(r> y)` | IDBKeyRange.lowerBound(y, true) | All keys > y |
+| `(r>=<= x y)` | IDBKeyRange.bound(x, y) | All keys ≥ x && ≤ y |
+| `(r><= x y)` | IDBKeyRange.bound(x, y, true, false) | All keys > x && ≤ y |
+| `(r>=< x y)` | IDBKeyRange.bound(x, y, false, true) | All keys ≥ x && < y |
+| `(r>< x y)` | IDBKeyRange.bound(x, y, true, true) | All keys > x && < y |
+| `(r= x)` | IDBKeyRange.only(x) | All keys = x |
 
 An example usage of `with-tx` is the following
 
