@@ -74,7 +74,6 @@ query type keyword to the native IndexedDB method is:
 | `:idb/delete` | [IDBObjectStore.delete()](https://developer.mozilla.org/en-US/docs/Web/API/IDBObjectStore/delete)|
 | `:idb/clear` | [IDBObjectStore.clear()](https://developer.mozilla.org/en-US/docs/Web/API/IDBObjectStore/clear)|
 
-From the above links you can see which (if any) arguments you should pass for every query type.
 **NOTE**: The `:idb/index` query accepts only two arguments; the name of the index to open and a query to run on the index e.g.
 
 ```clojure
@@ -102,9 +101,8 @@ An example usage of `with-tx` is the following
   (p/let [fk   "a/path"
           tk   "another/path"
           file (exec! ["files" [:idb/get fk]])]
-    (p/do!
-      (exec! ["files" [:idb/delete fk]])
-      (exec! ["files" [:idb/put file tk]]))))
+    (exec! ["files" [:idb/delete fk]])
+    (exec! ["files" [:idb/put file tk]])))
 ```
 
 
