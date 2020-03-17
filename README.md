@@ -24,8 +24,7 @@ To start just create a database instance as such:
 ```clojure
 (ns my.app.database
   (:require
-   [g7s.aye-db :as idb]
-   [promesa.core :as p]))
+   [g7s.aye-db :as idb]))
 
 
 (def db
@@ -99,7 +98,9 @@ Because some queries accept a [key range](https://developer.mozilla.org/en-US/do
 An example usage of `with-tx` is the following
 
 ```clojure
-(with-tx this exec!
+(require '[promesa.core :as p])
+
+(with-tx db exec!
   (p/let [fk   "a/path"
           tk   "another/path"
           file (exec! ["files" [:idb/get fk]])]
